@@ -1,3 +1,8 @@
+## Patched by Me
++ return a default value if no such key in map
+  + if the map is `map[string]string`, thus `map["key-not-exist"] == ""`
+  + if the map is `map[string]bool`, thus `map["key-not-exist"] == false`
+
 # Common Expression Language
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/google/cel-go)](https://goreportcard.com/report/github.com/google/cel-go)
