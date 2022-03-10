@@ -16,6 +16,7 @@ package interpreter
 
 import (
 	"fmt"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"math"
 
 	"github.com/google/cel-go/common/containers"
@@ -1024,7 +1025,12 @@ func refResolve(adapter ref.TypeAdapter, idx ref.Val, obj interface{}) (ref.Val,
 	if isMapper {
 		elem, found := mapper.Find(idx)
 		if !found {
-			return nil, fmt.Errorf("no such key: %v", idx)
+			// patched by koalr, return default value if no such key in map
+			reflectedMap, ok := obj.(protoreflect.Map)
+			if !ok {
+				return nil, fmt.Errorf("no such key: %v", idx)
+			}
+			return adapter.NativeToValue(reflectedMap.NewValue().Interface()), nil
 		}
 		return elem, nil
 	}
